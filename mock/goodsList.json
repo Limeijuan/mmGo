@@ -1,0 +1,24 @@
+{
+	"status": "1",
+	"msg": "",
+	"result": [
+		{
+			"commodityId": "0001",
+			"commodityName": "小米6",
+			"commodityPrice": "2345",
+			"commodityImg": "1.jpg"
+		},
+		{
+			"commodityId": "0002",
+			"commodityName": "华为荣耀6",
+			"commodityPrice": "4321",
+			"commodityImg": "2.jpg"
+		},
+		{
+			"commodityId": "0003",
+			"commodityName": "OPPO Find X",
+			"commodityPrice": "4325",
+			"commodityImg": "3.jpg"
+		}
+	]
+}
