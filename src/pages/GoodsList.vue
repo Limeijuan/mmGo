@@ -17,18 +17,14 @@
         <div class="filter stopPop" id="filter">
           <dl class="filter-price">
             <dt>Price:</dt>
-            <dd><a href="javascript:void(0)">All</a></dd>
-            <dd>
-              <a href="javascript:void(0)">0 - 100</a>
-            </dd>
-            <dd>
-              <a href="javascript:void(0)">100 - 500</a>
-            </dd>
-            <dd>
-              <a href="javascript:void(0)">500 - 1000</a>
-            </dd>
-            <dd>
-              <a href="javascript:void(0)">1000 - 2000</a>
+            <dd ><a href="javascript:void(0)">All</a></dd>
+            <dd v-for='(price, index) in priceFilter'
+                :key='index'
+                @click='handleClickChecked'
+                :class="{cur: priceChecked}">
+              <a href="javascript:void(0)">
+                {{price.startPrice}} - {{price.endPrice}}
+              </a>
             </dd>
           </dl>
         </div>
@@ -37,13 +33,13 @@
         <div class="accessory-list-wrap">
           <div class="accessory-list col-4">
             <ul>
-              <li>
+              <li v-for='item in goodsList' :key='item.commodityId'>
                 <div class="pic">
-                  <a href="#"><img src="static/1.jpg" alt=""></a>
+                  <a href="#"><img :src="'static/img/'+item.commodityImg" alt=""></a>
                 </div>
                 <div class="main">
-                  <div class="name">XX</div>
-                  <div class="price">999</div>
+                  <div class="name">{{item.commodityName}}</div>
+                  <div class="price">{{item.commodityPrice}}</div>
                   <div class="btn-area">
                     <a href="javascript:;" class="btn btn--m">加入购物车</a>
                   </div>
@@ -67,7 +63,26 @@ export default{
   name: 'GoodsList',
   data () {
     return {
-      goodsList: []
+      goodsList: [],
+      priceFilter: [
+        {
+          startPrice: '0.00',
+          endPrice: '500.00'
+        },
+        {
+          startPrice: '500.00',
+          endPrice: '1000.00'
+        },
+        {
+          startPrice: '1000.00',
+          endPrice: '1500.00'
+        },
+        {
+          startPrice: '1500.00',
+          endPrice: '2000.00'
+        }
+      ],
+      priceChecked: false
     }
   },
   components: {
@@ -75,12 +90,17 @@ export default{
     NavBread,
     CommonFooter
   },
-  mounted: {
+  created () {
+    this.getGoodsList()
+  },
+  methods: {
     getGoodsList () {
-      axios.get("api").then((result) => {
-        var res = result.data
-        this.goodsList = res.result
+      axios.get('/api').then((result) => {
+        this.goodsList = result.data.result
       })
+    },
+    handleClickChecked (event) {
+      console.log(event)
     }
   }
 }

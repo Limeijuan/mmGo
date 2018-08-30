@@ -12,11 +12,9 @@ const portfinder = require('portfinder')
 
 const express = require('express')
 const app = express()//请求server
-var apiRoutes = express.Router()
 var appData = require('../mock/goodsList.json')//加载本地数据文件
-apiRoutes.get("/api",(req,res,next) => {
-  res.json(goodsData);
-})//通过路由请求数据
+var router = express.Router()
+app.use(router)//通过路由请求数据
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -50,16 +48,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    before(app) {
+      app.get('/api', (req, res) => {
+        res.json(appData)
+      })
     }
-
-    // before(app) {
-    //   app.get('/api/seller', (req, res) => {
-    //     res.json({
-    //       errno: 0,
-    //       data: seller
-    //     })
-    //   })
-    // }
   },
   plugins: [
     new webpack.DefinePlugin({

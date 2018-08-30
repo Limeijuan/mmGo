@@ -19,6 +19,24 @@
 			"commodityName": "OPPO Find X",
 			"commodityPrice": "4325",
 			"commodityImg": "3.jpg"
+		},
+		{
+			"commodityId": "0004",
+			"commodityName": "小米6",
+			"commodityPrice": "2345",
+			"commodityImg": "1.jpg"
+		},
+		{
+			"commodityId": "0005",
+			"commodityName": "华为荣耀6",
+			"commodityPrice": "4321",
+			"commodityImg": "2.jpg"
+		},
+		{
+			"commodityId": "0006",
+			"commodityName": "OPPO Find X",
+			"commodityPrice": "4325",
+			"commodityImg": "3.jpg"
 		}
 	]
 }
