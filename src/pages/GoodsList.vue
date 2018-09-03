@@ -9,20 +9,29 @@
       <div class="filter-nav">
         <span class="sortby">Sort by:</span>
         <a href="javascript:void(0)" class="default cur">Default</a>
-        <a href="javascript:void(0)" class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
-        <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
+        <a href="javascript:void(0)" class="price">
+          Price
+          <svg class="icon icon-arrow-short">
+            <use xlink:href="#icon-arrow-short"></use>
+          </svg>
+        </a>
+        <a href="javascript:void(0)" class="filterby stopPop" @click='showPriceFilter'>Filter by</a>
       </div>
       <div class="accessory-result">
         <!-- filter -->
-        <div class="filter stopPop" id="filter">
+        <div class="filter stopPop" id="filter" :class='{"filterby-show": filterBy}'>
           <dl class="filter-price">
             <dt>Price:</dt>
-            <dd ><a href="javascript:void(0)">All</a></dd>
+            <dd >
+              <a href="javascript:void(0)"
+              @click='setPriceFilter("all")'
+              :class="{'cur': priceChecked=='all'}">All</a>
+            </dd>
             <dd v-for='(price, index) in priceFilter'
-                :key='index'
-                @click='handleClickChecked'
-                :class="{cur: priceChecked}">
-              <a href="javascript:void(0)">
+                :key='index'>
+              <a href="javascript:void(0)"
+              @click='setPriceFilter(index)'
+              :class="{'cur': priceChecked==index}">
                 {{price.startPrice}} - {{price.endPrice}}
               </a>
             </dd>
@@ -35,7 +44,7 @@
             <ul>
               <li v-for='item in goodsList' :key='item.commodityId'>
                 <div class="pic">
-                  <a href="#"><img :src="'static/img/'+item.commodityImg" alt=""></a>
+                  <a href="#"><img v-lazy="'static/img/'+item.commodityImg" alt=""></a>
                 </div>
                 <div class="main">
                   <div class="name">{{item.commodityName}}</div>
@@ -51,6 +60,7 @@
       </div>
     </div>
   </div>
+  <div class='md-overlay' v-show='overlayFlag' @click='handleClickOverlay'></div>
   <common-footer></common-footer>
 </div>
 </template>
@@ -82,7 +92,9 @@ export default{
           endPrice: '2000.00'
         }
       ],
-      priceChecked: false
+      priceChecked: 'all',
+      filterBy: false,
+      overlayFlag: false
     }
   },
   components: {
@@ -99,8 +111,18 @@ export default{
         this.goodsList = result.data.result
       })
     },
-    handleClickChecked (event) {
-      console.log(event)
+    showPriceFilter () {
+      this.filterBy = true
+      this.overlayFlag = true
+    },
+    handleClickOverlay () {
+      this.filterBy = false
+      this.overlayFlag = false
+    },
+    setPriceFilter (index) {
+      this.priceChecked = index
+      this.filterBy = false
+      this.overlayFlag = false
     }
   }
 }
