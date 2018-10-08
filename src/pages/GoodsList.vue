@@ -42,13 +42,13 @@
         <div class="accessory-list-wrap">
           <div class="accessory-list col-4">
             <ul>
-              <li v-for='item in goodsList' :key='item.commodityId'>
+              <li v-for='item in goodsList' :key='item.productId'>
                 <div class="pic">
-                  <a href="#"><img v-lazy="'static/img/'+item.commodityImg" alt=""></a>
+                  <a href="#"><img v-lazy="'static/img/'+item.productImage" alt=""></a>
                 </div>
                 <div class="main">
-                  <div class="name">{{item.commodityName}}</div>
-                  <div class="price">{{item.commodityPrice}}</div>
+                  <div class="name">{{item.productName}}</div>
+                  <div class="price">{{item.salePrice}}</div>
                   <div class="btn-area">
                     <a href="javascript:;" class="btn btn--m">加入购物车</a>
                   </div>

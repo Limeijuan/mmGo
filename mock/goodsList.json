@@ -3,40 +3,40 @@
 	"msg": "",
 	"result": [
 		{
-			"commodityId": "0001",
-			"commodityName": "小米6",
-			"commodityPrice": "2345",
-			"commodityImg": "1.jpg"
+			"productId": "0001",
+			"productName": "小米6",
+			"salePrice": "2345",
+			"productImage": "1.jpg"
 		},
 		{
-			"commodityId": "0002",
-			"commodityName": "华为荣耀6",
-			"commodityPrice": "4321",
-			"commodityImg": "2.jpg"
+			"productId": "0002",
+			"productName": "华为荣耀6",
+			"salePrice": "4321",
+			"productImage": "2.jpg"
 		},
 		{
-			"commodityId": "0003",
-			"commodityName": "OPPO Find X",
-			"commodityPrice": "4325",
-			"commodityImg": "3.jpg"
+			"productId": "0003",
+			"productName": "OPPO Find X",
+			"salePrice": "4325",
+			"productImage": "3.jpg"
 		},
 		{
-			"commodityId": "0004",
-			"commodityName": "小米6",
-			"commodityPrice": "2345",
-			"commodityImg": "1.jpg"
+			"productId": "0004",
+			"productName": "小米6",
+			"salePrice": "2345",
+			"productImage": "1.jpg"
 		},
 		{
-			"commodityId": "0005",
-			"commodityName": "华为荣耀6",
-			"commodityPrice": "4321",
-			"commodityImg": "2.jpg"
+			"productId": "0005",
+			"productName": "华为荣耀6",
+			"salePrice": "4321",
+			"productImage": "2.jpg"
 		},
 		{
-			"commodityId": "0006",
-			"commodityName": "OPPO Find X",
-			"commodityPrice": "4325",
-			"commodityImg": "3.jpg"
+			"productId": "0006",
+			"productName": "OPPO Find X",
+			"salePrice": "4325",
+			"productImage": "3.jpg"
 		}
 	]
 }
