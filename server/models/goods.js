@@ -7,4 +7,4 @@ var productSchema = new Schema({
 	"productImage": String
 });
 
-module.exports = mongoose.model('Good', productSchema);
+module.exports = mongoose.model('goodsList', productSchema, 'goods_list');

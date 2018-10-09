@@ -2,7 +2,8 @@
 <div>
   <common-header></common-header>
   <nav-bread>
-    <span>goods</span>
+    <span>goods</span> /
+    <span>goods2</span>
   </nav-bread>
   <div class="accessory-result-page accessory-page">
     <div class="container">
@@ -107,8 +108,13 @@ export default{
   },
   methods: {
     getGoodsList () {
-      axios.get('/api').then((result) => {
-        this.goodsList = result.data.result
+      axios.get('/goods').then((res) => {
+        var data = res.data
+        if (data.status === '0') {
+          this.goodsList = data.result.list
+        } else {
+          this.goodsList = []
+        }
       })
     },
     showPriceFilter () {
