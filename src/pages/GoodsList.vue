@@ -10,13 +10,13 @@
       <div class="filter-nav">
         <span class="sortby">Sort by:</span>
         <a href="javascript:void(0)" class="default cur">Default</a>
-        <a href="javascript:void(0)" class="price">
+        <a href="javascript:void(0)" class="price" @click="sortGoods">
           Price
           <svg class="icon icon-arrow-short">
-            <use xlink:href="#icon-arrow-short"></use>
+            <use xlink:href="../../static/svg.svg#icon-arrow-short"></use>
           </svg>
         </a>
-        <a href="javascript:void(0)" class="filterby stopPop" @click='showPriceFilter'>Filter by</a>
+        <a href="javascript:void(0)" class="filterby stopPop" @click="showPriceFilter">Filter by</a>
       </div>
       <div class="accessory-result">
         <!-- filter -->
@@ -42,7 +42,7 @@
         <!-- search result accessories list -->
         <div class="accessory-list-wrap">
           <div class="accessory-list col-4">
-            <ul>
+            <ul class="clearfix">
               <li v-for='item in goodsList' :key='item.productId'>
                 <div class="pic">
                   <a href="#"><img v-lazy="'static/img/'+item.productImage" alt=""></a>
@@ -56,6 +56,9 @@
                 </div>
               </li>
             </ul>
+            <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+              加载中...
+            </div>
           </div>
         </div>
       </div>
@@ -75,22 +78,26 @@ export default{
   data () {
     return {
       goodsList: [],
+      sortFlag: true,
+      page: 1,
+      pageSize: 8,
+      busy: true,
       priceFilter: [
         {
-          startPrice: '0.00',
-          endPrice: '500.00'
+          startPrice: '0',
+          endPrice: '500'
         },
         {
-          startPrice: '500.00',
-          endPrice: '1000.00'
+          startPrice: '500',
+          endPrice: '1000'
         },
         {
-          startPrice: '1000.00',
-          endPrice: '1500.00'
+          startPrice: '1000',
+          endPrice: '1500'
         },
         {
-          startPrice: '1500.00',
-          endPrice: '2000.00'
+          startPrice: '1500',
+          endPrice: '2000'
         }
       ],
       priceChecked: 'all',
@@ -103,19 +110,41 @@ export default{
     NavBread,
     CommonFooter
   },
-  created () {
+  mounted () {
     this.getGoodsList()
   },
   methods: {
-    getGoodsList () {
-      axios.get('/goods').then((res) => {
+    getGoodsList (scrollFalg) {
+      var param = {
+        page: this.page,
+        pageSize: this.pageSize,
+        sort: this.sortFlag ? 1 : -1,
+        pricelevel: this.priceChecked
+      }
+
+      axios.get('/goods', {params: param}).then((res) => {
         var data = res.data
         if (data.status === '0') {
-          this.goodsList = data.result.list
+          if (scrollFalg) {
+            this.goodsList = this.goodsList.concat(data.result.list)
+            if (data.result.count < this.pageSize) {
+              this.busy = true
+            } else {
+              this.busy = false
+            }
+          } else {
+            this.goodsList = data.result.list
+            this.busy = false
+          }
         } else {
           this.goodsList = []
         }
       })
+    },
+    sortGoods () {
+      this.sortFlag = !this.sortFlag
+      this.page = 1
+      this.getGoodsList()
     },
     showPriceFilter () {
       this.filterBy = true
@@ -129,6 +158,15 @@ export default{
       this.priceChecked = index
       this.filterBy = false
       this.overlayFlag = false
+      this.page = 1
+      this.getGoodsList()
+    },
+    loadMore () {
+      this.busy = true
+      setTimeout(() => {
+        this.page++
+        this.getGoodsList(true)
+      }, 500)
     }
   }
 }

@@ -23,6 +23,12 @@ router.get('/', function(req,res,next) {
 	let page = req.param('page');
 	let pageSize = parseInt(req.param('pageSize'));
 	let sort = parseInt(req.param('sort'));
+	let priceLevel = req.param('priceLevel');
+	if(priceLevel != 'all') {
+		switch (priceLevel) {
+			case 
+		}
+	}
 	let skip = (page - 1)*pageSize;
 	let params = {};
 	let goodsModel = Goods.find(params).skip(skip).limit(pageSize);
