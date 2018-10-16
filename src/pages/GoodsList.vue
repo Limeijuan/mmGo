@@ -51,13 +51,13 @@
                   <div class="name">{{item.productName}}</div>
                   <div class="price">{{item.salePrice}}</div>
                   <div class="btn-area">
-                    <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                    <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                   </div>
                 </div>
               </li>
             </ul>
-            <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
-              加载中...
+            <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" style="text-align: center">
+              <img src="../../static/loading-svg/loading-spinning-bubbles.svg" alt="" v-show="loading">
             </div>
           </div>
         </div>
@@ -82,6 +82,7 @@ export default{
       page: 1,
       pageSize: 8,
       busy: true,
+      loading: false,
       priceFilter: [
         {
           startPrice: '0',
@@ -115,17 +116,18 @@ export default{
   },
   methods: {
     getGoodsList (scrollFalg) {
+      this.loading = true
       var param = {
         page: this.page,
         pageSize: this.pageSize,
         sort: this.sortFlag ? 1 : -1,
-        pricelevel: this.priceChecked
+        priceLevel: this.priceChecked
       }
-
       axios.get('/goods', {params: param}).then((res) => {
         var data = res.data
         if (data.status === '0') {
           if (scrollFalg) {
+            this.loading = false
             this.goodsList = this.goodsList.concat(data.result.list)
             if (data.result.count < this.pageSize) {
               this.busy = true
@@ -167,6 +169,19 @@ export default{
         this.page++
         this.getGoodsList(true)
       }, 500)
+    },
+    addCart (productId) {
+      axios.post('/goods/addCart', {
+        productId: productId
+      }).then((res) => {
+        if (res.data.status === '0') {
+          alert('加入成功')
+        } else {
+          alert('msg:' + res.msg)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }
