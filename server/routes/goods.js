@@ -1,31 +1,25 @@
 var express = require('express');
-// var bodyParser = require('body-parser');
 var router = express.Router();
 var mongoose = require('mongoose');
 var Goods = require('../models/goods.js');
 var User = require('../models/user.js');
 
-// create application/json parser
-// var jsonParser = bodyParser.json()
-// create application/x-www-form-urlencoded parser
-// var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-
-// 连接MongoDB数据库
+// // 连接MongoDB数据库
 mongoose.connect('mongodb://127.0.0.1:27017/text');
 
-// 连接成功
-mongoose.connection.on('connected', function() {
-	console.log('MongoDB connected success.');
-});
-// 连接失败
-mongoose.connection.on('error', function() {
-	console.log('MongoDB connected fail.');
-});
-// 断开连接
-mongoose.connection.on('disconnected', function() {
-	console.log('MongoDB connected disconnected.');
-});
+// // 连接成功
+// mongoose.connection.on('connected', function() {
+// 	console.log('MongoDB connected success.');
+// });
+// // 连接失败
+// mongoose.connection.on('error', function() {
+// 	console.log('MongoDB connected fail.');
+// });
+// // 断开连接
+// mongoose.connection.on('disconnected', function() {
+// 	console.log('MongoDB connected disconnected.');
+// });
 
 // 查询商品列表
 router.get('/', function(req,res,next) {
@@ -89,37 +83,61 @@ router.post('/addCart', function(req,res,next) {
 			})
 		}else {
 			if(userDoc) {
-				Goods.findOne({productId: productId}, function(err, doc) {
-					if(err) {
-						res.json({
-							status:'1',
-							msg: err.message
-						})
-					}else {
-						if(doc) {
-							console.log(doc);
-							doc.productNum = '1';
-							doc.checked = '1';
-							console.log(doc);
-							userDoc.cartList.push(doc);
-							userDoc.save(function(saveErr, saveDoc) {
-								if(saveErr) {
-									res.json({
-										status: '1',
-										msg: saveErr.message
-									})
-								}else {
-									res.json({
-										status: '0',
-										msg: '',
-										result: 'success'
-									})
-								}
-							})
-
-						}
+				let goodsItem = ''
+				userDoc.cartList.forEach((item) => {
+					if(item.productId == productId) {
+						goodsItem = item;
+						item.productNum ++;
 					}
 				})
+				
+				if(goodsItem) {
+					userDoc.save(function(saveErr,saveDoc) {
+						if(saveErr) {
+							res.json({
+								status: '1',
+								msg: saveErr.message
+							})
+						}else {
+							res.json({
+								status: '0',
+								msg: '',
+								result: 'success'
+							})
+						}
+					})
+				}else {
+					Goods.findOne({productId: productId}, function(err, doc) {
+						if(err) {
+							res.json({
+								status:'1',
+								msg: err.message
+							})
+						}else {
+							if(doc) {
+								var docs = JSON.parse(JSON.stringify(doc));
+								docs.productNum = '1';
+								docs.checked = '1';
+								userDoc.cartList.push(docs);
+								userDoc.save(function(saveErr, saveDoc) {
+									if(saveErr) {
+										res.json({
+											status: '1',
+											msg: saveErr.message
+										})
+									}else {
+										res.json({
+											status: '0',
+											msg: '',
+											result: 'success'
+										})
+									}
+								})
+
+							}
+						}
+					})
+				}
 			}
 		}
 	})

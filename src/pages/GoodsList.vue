@@ -1,74 +1,75 @@
 <template>
-<div>
-  <common-header></common-header>
-  <nav-bread>
-    <span>goods</span> /
-    <span>goods2</span>
-  </nav-bread>
-  <div class="accessory-result-page accessory-page">
-    <div class="container">
-      <div class="filter-nav">
-        <span class="sortby">Sort by:</span>
-        <a href="javascript:void(0)" class="default cur">Default</a>
-        <a href="javascript:void(0)" class="price" @click="sortGoods">
-          Price
-          <svg class="icon icon-arrow-short">
-            <use xlink:href="../../static/svg.svg#icon-arrow-short"></use>
-          </svg>
-        </a>
-        <a href="javascript:void(0)" class="filterby stopPop" @click="showPriceFilter">Filter by</a>
-      </div>
-      <div class="accessory-result">
-        <!-- filter -->
-        <div class="filter stopPop" id="filter" :class='{"filterby-show": filterBy}'>
-          <dl class="filter-price">
-            <dt>Price:</dt>
-            <dd >
-              <a href="javascript:void(0)"
-              @click='setPriceFilter("all")'
-              :class="{'cur': priceChecked=='all'}">All</a>
-            </dd>
-            <dd v-for='(price, index) in priceFilter'
-                :key='index'>
-              <a href="javascript:void(0)"
-              @click='setPriceFilter(index)'
-              :class="{'cur': priceChecked==index}">
-                {{price.startPrice}} - {{price.endPrice}}
-              </a>
-            </dd>
-          </dl>
+  <div>
+    <common-header></common-header>
+    <nav-bread>
+      <span>goods</span> /
+      <span>goods2</span>
+    </nav-bread>
+    <div class="accessory-result-page accessory-page">
+      <div class="container">
+        <div class="filter-nav">
+          <span class="sortby">Sort by:</span>
+          <a href="javascript:void(0)" class="default cur">Default</a>
+          <a href="javascript:void(0)" class="price" @click="sortGoods">
+            Price
+            <svg class="icon icon-arrow-short">
+              <use xlink:href="../../static/svg.svg#icon-arrow-short"></use>
+            </svg>
+          </a>
+          <a href="javascript:void(0)" class="filterby stopPop" @click="showPriceFilter">Filter by</a>
         </div>
+        <div class="accessory-result">
+          <!-- filter -->
+          <div class="filter stopPop" id="filter" :class='{"filterby-show": filterBy}'>
+            <dl class="filter-price">
+              <dt>Price:</dt>
+              <dd >
+                <a href="javascript:void(0)"
+                @click='setPriceFilter("all")'
+                :class="{'cur': priceChecked=='all'}">All</a>
+              </dd>
+              <dd v-for='(price, index) in priceFilter'
+                  :key='index'>
+                <a href="javascript:void(0)"
+                @click='setPriceFilter(index)'
+                :class="{'cur': priceChecked==index}">
+                  {{price.startPrice}} - {{price.endPrice}}
+                </a>
+              </dd>
+            </dl>
+          </div>
 
-        <!-- search result accessories list -->
-        <div class="accessory-list-wrap">
-          <div class="accessory-list col-4">
-            <ul class="clearfix">
-              <li v-for='item in goodsList' :key='item.productId'>
-                <div class="pic">
-                  <a href="#"><img v-lazy="'static/img/'+item.productImage" alt=""></a>
-                </div>
-                <div class="main">
-                  <div class="name">{{item.productName}}</div>
-                  <div class="price">{{item.salePrice}}</div>
-                  <div class="btn-area">
-                    <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
+          <!-- search result accessories list -->
+          <div class="accessory-list-wrap">
+            <div class="accessory-list col-4">
+              <ul class="clearfix">
+                <li v-for='item in goodsList' :key='item.productId'>
+                  <div class="pic">
+                    <a href="#"><img v-lazy="'static/img/'+item.productImage" alt=""></a>
                   </div>
-                </div>
-              </li>
-            </ul>
-            <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" style="text-align: center">
-              <img src="../../static/loading-svg/loading-spinning-bubbles.svg" alt="" v-show="loading">
+                  <div class="main">
+                    <div class="name">{{item.productName}}</div>
+                    <div class="price">{{item.salePrice}}</div>
+                    <div class="btn-area">
+                      <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" style="text-align: center">
+                <img src="../../static/loading-svg/loading-spinning-bubbles.svg" alt="" v-show="loading">
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- <div class='md-overlay' v-show='overlayFlag' @click='handleClickOverlay'></div> -->
+    <common-footer></common-footer>
   </div>
-  <div class='md-overlay' v-show='overlayFlag' @click='handleClickOverlay'></div>
-  <common-footer></common-footer>
-</div>
 </template>
 <script>
+import '@/assets/css/product.css'
 import CommonHeader from '@/components/Header'
 import CommonFooter from '@/components/Footer'
 import NavBread from '@/components/Bread'
