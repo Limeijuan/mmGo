@@ -14,9 +14,8 @@
           </div>
           <div v-if="nickName">
             <span v-text="nickName" ></span>
-            <a href="javascript:void(0)" class="navbar-link" @click="loginModelFlag =true" >Login Out</a>
+            <a href="javascript:void(0)" class="navbar-link" @click="loginOut" >Login Out</a>
           </div>
-          
           <div class="navbar-cart-container">
             <span class="navbar-cart-count"></span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -76,7 +75,7 @@ export default {
   },
   methods: {
     login () {
-      if(!this.userName || !this.userPwd) {
+      if (!this.userName || !this.userPwd) {
         this.errorTip = true
       }
       axios.post('/users/login', {
@@ -89,6 +88,15 @@ export default {
           this.nickName = res.data.result.userName
         } else {
           this.errorTip = true
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    loginOut () {
+      axios.post('/users/loginOut').then((res) => {
+        if (res.data.status === '0') {
+          this.nickName = ''
         }
       }).catch((err) => {
         console.log(err)

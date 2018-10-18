@@ -7,6 +7,7 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+// 登陆
 router.post('/login', function(req, res, next) {
 	var param = {
 		userName: req.body.userName,
@@ -34,6 +35,18 @@ router.post('/login', function(req, res, next) {
 				})
 			}
 		}
+	})
+})
+// 退出
+router.post('/loginOut', function(req, res, next) {
+	res.cookie('userId', '', {
+		path: '/',
+		maxAge: -1
+	})
+	res.json({
+		status: '0',
+		msg: '',
+		result: ''
 	})
 })
 
