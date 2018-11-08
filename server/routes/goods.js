@@ -8,18 +8,18 @@ var User = require('../models/user.js');
 // // 连接MongoDB数据库
 mongoose.connect('mongodb://127.0.0.1:27017/text');
 
-// // 连接成功
-// mongoose.connection.on('connected', function() {
-// 	console.log('MongoDB connected success.');
-// });
-// // 连接失败
-// mongoose.connection.on('error', function() {
-// 	console.log('MongoDB connected fail.');
-// });
-// // 断开连接
-// mongoose.connection.on('disconnected', function() {
-// 	console.log('MongoDB connected disconnected.');
-// });
+// 连接成功
+mongoose.connection.on('connected', function() {
+	console.log('MongoDB connected success.');
+});
+// 连接失败
+mongoose.connection.on('error', function() {
+	console.log('MongoDB connected fail.');
+});
+// 断开连接
+mongoose.connection.on('disconnected', function() {
+	console.log('MongoDB connected disconnected.');
+});
 
 // 查询商品列表
 router.get('/', function(req,res,next) {
@@ -73,8 +73,9 @@ router.get('/', function(req,res,next) {
 
 // 加入购物车
 router.post('/addCart', function(req,res,next) {
+	// 需用户登录；取id,
 	// post取参 req.body
-	var userId = '100000077', productId = req.body.productId;
+	var userId = req.cookies.userId, productId = req.body.productId;
 	User.findOne({userId:userId},function(err, userDoc) {
 		if(err) {
 			res.json({

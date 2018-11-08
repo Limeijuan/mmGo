@@ -12,7 +12,7 @@
           <a href="javascript:void(0)" class="default cur">Default</a>
           <a href="javascript:void(0)" class="price" @click="sortGoods">
             Price
-            <svg class="icon icon-arrow-short">
+            <svg class="icon icon-arrow-short" v-bind:class="{'sort-up': !sortFlag}">
               <use xlink:href="../../static/svg.svg#icon-arrow-short"></use>
             </svg>
           </a>
@@ -64,15 +64,37 @@
         </div>
       </div>
     </div>
-    <!-- <div class='md-overlay' v-show='overlayFlag' @click='handleClickOverlay'></div> -->
     <common-footer></common-footer>
+
+    <!-- 模态弹框-是否登陆 -->
+    <modal :mdShow="mdShow" @close="modalClose">
+      <p slot="message" style="font-size:20px;color:red;"> 请先登录，否则无法加入到购物车！ </p>
+      <div slot="btnGroup">
+        <a href="javascript:void(0);" class="btn-login" @click="mdShow=false">关闭</a>
+      </div>
+    </modal>
+
+    <!-- 模态弹框-加入购物车成功后 -->
+    <modal :mdShow="mdShowCart" @close="modalClose">
+      <p slot="message" style="font-size:20px;color:red;">
+        <svg class="icon icon-status-ok">
+          <use xlink:href="../../static/svg.svg#icon-status-ok"></use>
+        </svg>
+        加入购物车成功！
+      </p>
+      <div slot="btnGroup">
+        <a href="javascript:void(0);" class="btn-blue" @click="mdShowCart=false">继续购物</a>
+        <router-link href="javascript:void(0);" class="btn-green" to="/cart">查看购物车</router-link>
+      </div>
+    </modal>
+
   </div>
 </template>
 <script>
-import '@/assets/css/product.css'
 import CommonHeader from '@/components/Header'
 import CommonFooter from '@/components/Footer'
 import NavBread from '@/components/Bread'
+import Modal from '@/components/Modal'
 import axios from 'axios'
 export default{
   name: 'GoodsList',
@@ -84,6 +106,8 @@ export default{
       pageSize: 8,
       busy: true,
       loading: false,
+      mdShow: false,
+      mdShowCart: false,
       priceFilter: [
         {
           startPrice: '0',
@@ -110,7 +134,8 @@ export default{
   components: {
     CommonHeader,
     NavBread,
-    CommonFooter
+    CommonFooter,
+    Modal
   },
   mounted () {
     this.getGoodsList()
@@ -176,14 +201,51 @@ export default{
         productId: productId
       }).then((res) => {
         if (res.data.status === '0') {
-          alert('加入成功')
+          this.mdShowCart = true
         } else {
-          alert('msg:' + res.msg)
+          this.mdShow = true
         }
       }).catch((err) => {
         console.log(err)
       })
+    },
+    modalClose () {
+      this.mdShow = false
+      this.mdShowCart = false
     }
   }
 }
 </script>
+<style scope>
+  .icon-arrow-short {
+    transition: all .3s ease-out;
+  }
+  .sort-up {
+    transform: rotate(180deg);
+    transition: all .3s ease-out;
+  }
+  .btn-blue {
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+    background: #009de6;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+    width: 126px;
+    border-radius: 3px;
+    margin: 0 10px;
+  }
+  .btn-green {
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+    background: #009916;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+    width: 126px;
+    border-radius: 3px;
+    margin: 0 10px;
+  }
+</style>
