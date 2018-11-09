@@ -42,11 +42,11 @@
             <ul>
               <li class="regi_form_input">
                 <i class="icon IconPeople"></i>
-                <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="User Name" data-type="loginname">
+                <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="User Name" data-type="loginname" @keyup.enter="login">
               </li>
               <li class="regi_form_input noMargin">
                 <i class="icon IconPwd"></i>
-                <input type="password" tabindex="2"  name="password" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="Password" v-model="userPwd">
+                <input type="password" tabindex="2"  name="password" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="Password" v-model="userPwd" @keyup.enter="login">
               </li>
             </ul>
           </div>
@@ -96,6 +96,7 @@ export default {
       axios.post('/users/loginOut').then((res) => {
         if (res.data.status === '0') {
           this.nickName = ''
+          
         }
       }).catch((err) => {
         console.log(err)

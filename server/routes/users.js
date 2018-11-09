@@ -68,11 +68,25 @@ router.get("/checkLogin", function (req,res,next) {
 // 查询当前用户购物车数据
 router.post('/cartList', function(req, res, next) {
 	if(req.cookies.userId){
-      res.json({
-        status:'0',
-        msg:'',
-        result:req.cookies.userName || ''
-      });
+      var userId = req.cookies.userId;
+      User.findOne({userId: userId},function(err, doc) {
+      	if(err) {
+      		res.json({
+      			status: '1',
+      			msg: err.massage,
+      			result: ''
+      		})
+      	}else {
+      		if(doc) {
+      			console.log(doc.cartList);
+      			res.json({
+      			status: '0',
+      			msg: 'success',
+      			result: doc.cartList || ''
+      		})
+      		}
+      	}
+      })
   }else{
     res.json({
       status:'1',

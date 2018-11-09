@@ -13,7 +13,7 @@
           <a href="javascript:void(0)" class="price" @click="sortGoods">
             Price
             <svg class="icon icon-arrow-short" v-bind:class="{'sort-up': !sortFlag}">
-              <use xlink:href="../../static/svg.svg#icon-arrow-short"></use>
+              <use xlink:href="static/svg.svg#icon-arrow-short"></use>
             </svg>
           </a>
           <a href="javascript:void(0)" class="filterby stopPop" @click="showPriceFilter">Filter by</a>
@@ -57,7 +57,7 @@
                 </li>
               </ul>
               <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" style="text-align: center">
-                <img src="../../static/loading-svg/loading-spinning-bubbles.svg" alt="" v-show="loading">
+                <img src="static/loading-svg/loading-spinning-bubbles.svg" alt="" v-show="loading">
               </div>
             </div>
           </div>

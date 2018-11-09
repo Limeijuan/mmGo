@@ -22,7 +22,7 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li>
+              <li v-for="item in cartLists" :key="item._id">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
                     <a href="javascipt:;" class="checkbox-btn item-check-btn" >
@@ -32,21 +32,21 @@
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img >
+                    <img v-lazy="'static/img/'+item.productImage" alt="">
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name">;lkj</div>
+                    <div class="item-name">{{item.productName}}</div>
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">jkl</div>
+                  <div class="item-price">{{item.salePrice}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
                         <a class="input-sub">-</a>
-                        <span class="select-ipt">hjkh</span>
+                        <span class="select-ipt">{{item.productNum}}</span>
                         <a class="input-add" >+</a>
                       </div>
                     </div>
@@ -102,7 +102,6 @@
       </div>
     </modal> -->
 
-
   </div>
 </template>
 <script>
@@ -115,17 +114,33 @@ import axios from 'axios'
 export default{
   name: 'CartList',
   data () {
-    return {}
+    return {
+      cartLists: []
+    }
   },
   components: {
     CommonHeader,
     NavBread,
     CommonFooter,
     Modal
+  },
+  mounted () {
+    this.getCartList()
+  },
+  methods: {
+    getCartList () {
+      axios.post('/users/cartList')
+        .then((res) => {
+          let data = res.data
+          if (data) {
+            this.cartLists = data.result
+          }
+        })
+    }
   }
 }
 </script>
-<style >
+<style scope>
   .input-sub,.input-add{
     min-width: 40px;
     height: 100%;
