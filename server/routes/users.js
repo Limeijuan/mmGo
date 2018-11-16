@@ -13,6 +13,7 @@ router.post('/login', function(req, res, next) {
 		userName: req.body.userName,
 		userPwd: req.body.userPwd
 	};
+  req.session.userInfo=param;
 	User.findOne(param, function(err,doc) {
 		if(err) {
 			res.json({
