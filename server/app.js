@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var ejs = require('ejs');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);// 引入mongo用来保存session
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -28,20 +29,17 @@ app.use(express.urlencoded({ extended: false }));
 
 //这里传入了一个密钥加session id
 app.use(cookieParser('Wilson'));
-//使用就靠这个中间件
 app.use(session({
-    name: config.sessionId,
-    secret: config.sessionSecret,  // 用来对session id相关的cookie进行签名
-    store: new MongoStore({ //创建新的mongodb数据库
-        url: config.url, //比如：'mongodb://cha:root@localhost:27017/ch_db'
-        collection: config.sessionCollection //比如：'ch_sessions'
-    }),
-    saveUninitialized: true,  // 是否自动保存未初始化的会话，这里一定是true
-    resave: false,  // 是否每次都重新保存会话，建议false
-    cookie: {
-        maxAge: 24*60*60*1000  // 有效期，单位是毫秒
-    }
-}));
+    secret:'Wilson', //加密字符串也可以写数组
+    resave:true,     //强制保存session 建议设置成false
+    saveUninitialized:true,  //强制保存未初始化的内容
+    rolling:true, //动态刷新页面cookie存放时间
+    cookie:{maxAge:60*60*1000}, //保存时效
+    store:new MongoStore({   //将session存进数据库  用来解决负载均衡的问题
+        url:'mongodb://127.0.0.1:27017/text',
+        touchAfter:24*3600 //通过这样做，设置touchAfter:24 * 3600，您在24小时内只更新一次会话，不管有多少请求(除了在会话数据上更改某些内容的除外)
+    })
+}))
 
 app.use(express.static(path.join(__dirname, 'public')));
 
