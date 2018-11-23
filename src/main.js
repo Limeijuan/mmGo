@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 import VueLazyload from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
+import Global from '@/components/Global'
+// import axios from 'axios'
 import '@/assets/css/base.css'
 import '@/assets/css/login.css'
 import './assets/css/product.css'
@@ -22,3 +24,5 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+Vue.prototype.GLOBAL = Global

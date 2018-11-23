@@ -13,7 +13,7 @@
             <a href="javascript:void(0)" class="navbar-link">Register</a>
           </div>
           <div v-if="nickName">
-            <span v-text="nickName" ></span>
+            <span v-text="nickName"></span>
             <a href="javascript:void(0)" class="navbar-link" @click="loginOut" >Login Out</a>
           </div>
           <div class="navbar-cart-container">
@@ -51,7 +51,7 @@
             </ul>
           </div>
           <div class="login-wrap">
-            <a href="javascript:;" class="btn-login" @click="login">登  录</a>
+            <a href="javascript:;" class="mybtn btn-login" @click="login">登  录</a>
           </div>
         </div>
       </div>
@@ -96,7 +96,6 @@ export default {
       axios.post('/users/loginOut').then((res) => {
         if (res.data.status === '0') {
           this.nickName = ''
-          
         }
       }).catch((err) => {
         console.log(err)

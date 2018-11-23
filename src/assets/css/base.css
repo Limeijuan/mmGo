@@ -26,7 +26,6 @@ ul, ol {
   margin: 0;
   padding: 0;
 }
-
 div, p, dl, dt, dd {
   margin: 0;
   padding: 0;
@@ -620,7 +619,7 @@ a:hover {
 }
 
 .btn:hover, .btn[href]:hover {
-  background-color: #ffe5e6;
+  /*background-color: #ffe5e6;*/
   -webkit-transition: all .3s ease-out;
   transition: all .3s ease-out;
 }
@@ -655,6 +654,47 @@ a:hover {
   vertical-align: top;
 }
 
+.mybtn {
+  display: inline-block;
+  height: 38px;
+  line-height: 38px;
+  color: #fff !important;
+  font-size: 18px;
+  text-align: center;
+  width: 126px;
+  border-radius: 3px;
+  margin: 0 10px;
+}
+
+.btn-login{
+  background: #009de6;
+  width: 100%;
+  margin: auto;
+}
+.btn-login:hover {
+  background: #1E90FF;
+}
+
+.btn-blue {
+  background:#1C86EE;
+}
+.btn-blue:hover {
+  background: #1874CD;
+}
+
+.btn-success {
+  background: #228B22;
+}
+.btn-success:hover {
+  background: #2E8B57;
+}
+
+.btn-danger {
+  background: #EA0000;
+}
+.btn-danger:hover {
+  background: #CE0000;
+}
 .up-down-btn {
   color: #ee7a23;
 }
@@ -1306,3 +1346,4 @@ html {
     font-size: 12px;
   }
 }
+

@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var Goods = require('../models/goods.js');
-var User = require('../models/user.js');
 
 
 // // 连接MongoDB数据库
@@ -70,78 +69,5 @@ router.get('/', function(req,res,next) {
 	})
 });
 
-
-// 加入购物车
-router.post('/addCart', function(req,res,next) {
-	// 需用户登录；取id,
-	// post取参 req.body
-	var userId = req.cookies.userId, productId = req.body.productId;
-	User.findOne({userId:userId},function(err, userDoc) {
-		if(err) {
-			res.json({
-				status: '1',
-				msg: err.message
-			})
-		}else {
-			if(userDoc) {
-				let goodsItem = ''
-				userDoc.cartList.forEach((item) => {
-					if(item.productId == productId) {
-						goodsItem = item;
-						item.productNum ++;
-					}
-				})
-				
-				if(goodsItem) {
-					userDoc.save(function(saveErr,saveDoc) {
-						if(saveErr) {
-							res.json({
-								status: '1',
-								msg: saveErr.message
-							})
-						}else {
-							res.json({
-								status: '0',
-								msg: '',
-								result: 'success'
-							})
-						}
-					})
-				}else {
-					Goods.findOne({productId: productId}, function(err, doc) {
-						if(err) {
-							res.json({
-								status:'1',
-								msg: err.message
-							})
-						}else {
-							if(doc) {
-								var docs = JSON.parse(JSON.stringify(doc));
-								docs.productNum = '1';
-								docs.checked = '1';
-								userDoc.cartList.push(docs);
-								userDoc.save(function(saveErr, saveDoc) {
-									if(saveErr) {
-										res.json({
-											status: '1',
-											msg: saveErr.message
-										})
-									}else {
-										res.json({
-											status: '0',
-											msg: '',
-											result: 'success'
-										})
-									}
-								})
-
-							}
-						}
-					})
-				}
-			}
-		}
-	})
-})
 
 module.exports = router;

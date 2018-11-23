@@ -70,7 +70,7 @@
     <modal :mdShow="mdShow" @close="modalClose">
       <p slot="message" style="font-size:20px;color:red;"> 请先登录，否则无法加入到购物车！ </p>
       <div slot="btnGroup">
-        <a href="javascript:void(0);" class="btn-login" @click="mdShow=false">关闭</a>
+        <a href="javascript:void(0);" class="mybtn btn-login" @click="mdShow=false">关闭</a>
       </div>
     </modal>
 
@@ -83,8 +83,8 @@
         加入购物车成功！
       </p>
       <div slot="btnGroup">
-        <a href="javascript:void(0);" class="btn-blue" @click="mdShowCart=false">继续购物</a>
-        <router-link href="javascript:void(0);" class="btn-green" to="/cart">查看购物车</router-link>
+        <a href="javascript:void(0);" class="mybtn btn-blue" @click="mdShowCart=false">继续购物</a>
+        <router-link href="javascript:void(0);" class="mybtn btn-green" to="/cart">查看购物车</router-link>
       </div>
     </modal>
 
@@ -197,7 +197,7 @@ export default{
       }, 500)
     },
     addCart (productId) {
-      axios.post('/goods/addCart', {
+      axios.post('/users/addCart', {
         productId: productId
       }).then((res) => {
         if (res.data.status === '0') {
@@ -223,29 +223,5 @@ export default{
   .sort-up {
     transform: rotate(180deg);
     transition: all .3s ease-out;
-  }
-  .btn-blue {
-    display: inline-block;
-    height: 38px;
-    line-height: 38px;
-    background: #009de6;
-    color: #fff;
-    font-size: 18px;
-    text-align: center;
-    width: 126px;
-    border-radius: 3px;
-    margin: 0 10px;
-  }
-  .btn-green {
-    display: inline-block;
-    height: 38px;
-    line-height: 38px;
-    background: #009916;
-    color: #fff;
-    font-size: 18px;
-    text-align: center;
-    width: 126px;
-    border-radius: 3px;
-    margin: 0 10px;
   }
 </style>

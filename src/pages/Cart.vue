@@ -27,12 +27,12 @@
                   <div class="cart-item-check">
                     <a href="javascipt:;" class="checkbox-btn item-check-btn" >
                       <svg class="icon icon-ok">
-                        <use xlink:href="#icon-ok"></use>
+                        <use xlink:href="static/svg.svg#icon-ok"></use>
                       </svg>
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img v-lazy="'static/img/'+item.productImage" alt="">
+                    <img v-lazy="'static/img/'+item.productImage" :alt="item.productName">
                   </div>
                   <div class="cart-item-title">
                     <div class="item-name">{{item.productName}}</div>
@@ -45,21 +45,21 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub">-</a>
+                        <a class="input-sub" @click="editCart('minus',item)">-</a>
                         <span class="select-ipt">{{item.productNum}}</span>
-                        <a class="input-add" >+</a>
+                        <a class="input-add" @click="editCart('add',item)">+</a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">jh</div>
+                  <div class="item-price-total">{{item.salePrice*item.productNum}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn" >
+                    <a href="javascript:;" class="item-edit-btn" @click="deletePro(item.productId)">
                       <svg class="icon icon-del">
-                        <use xlink:href="#icon-del"></use>
+                        <use xlink:href="static/svg.svg#icon-del"></use>
                       </svg>
                     </a>
                   </div>
@@ -74,7 +74,7 @@
               <div class="item-all-check">
                 <a href="javascipt:;">
                   <span class="checkbox-btn item-check-btn">
-                      <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
+                      <a class="icon icon-ok"><use xlink:href="static/svg.svg#icon-ok"></use></a>
                   </span>
                   <span>Select all</span>
                 </a>
@@ -94,14 +94,14 @@
     </div>
     <common-footer></common-footer>
 
-    <!-- 模态弹框-是否登陆 -->
-    <!-- <modal :mdShow="mdShow" @close="modalClose">
-      <p slot="message" style="font-size:20px;color:red;"> 请先登录，否则无法加入到购物车！ </p>
+    <!-- 模态弹框 -->
+    <Modal :mdShow="isDel" @close="handleClose">
+      <p slot="message" style="font-size: 18px;line-height: 70px;">你确认要删除此商品吗?</p>
       <div slot="btnGroup">
-        <a href="javascript:void(0);" class="btn-login" @click="mdShow=false">关闭</a>
+        <a href="javascript:void(0)" class="mybtn btn-danger" @click="delConfirm">确认</a>
+        <a href="javascript:void(0)" class="mybtn btn-blue" @click="isDel = false">取消</a>
       </div>
-    </modal> -->
-
+    </Modal>
   </div>
 </template>
 <script>
@@ -115,7 +115,9 @@ export default{
   name: 'CartList',
   data () {
     return {
-      cartLists: []
+      cartLists: [],
+      isDel: false,
+      productId: ''
     }
   },
   components: {
@@ -136,6 +138,33 @@ export default{
             this.cartLists = data.result
           }
         })
+    },
+    // 删除商品
+    deletePro (productId) {
+      this.productId = productId
+      this.isDel = true
+    },
+    handleClose () {
+      this.isDel = false
+    },
+    delConfirm () {
+      axios.post('users/removePro', {productId: this.productId})
+        .then((res) => {
+          if (res.data.status === '0') {
+            this.isDel = false
+            this.getCartList()
+          }
+        })
+    },
+    editCart (flag,item) {
+      if (flag === 'add') {
+        item.productNum++
+      }else {
+        if (item.productNum <=1) {
+          return;
+        }
+        item.productNum--
+      }
     }
   }
 }
