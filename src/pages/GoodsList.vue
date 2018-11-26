@@ -84,7 +84,7 @@
       </p>
       <div slot="btnGroup">
         <a href="javascript:void(0);" class="mybtn btn-blue" @click="mdShowCart=false">继续购物</a>
-        <router-link href="javascript:void(0);" class="mybtn btn-green" to="/cart">查看购物车</router-link>
+        <router-link href="javascript:void(0);" class="mybtn btn-success" to="/cart">查看购物车</router-link>
       </div>
     </modal>
 

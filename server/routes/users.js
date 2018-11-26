@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var Goods = require('../models/goods.js');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -94,6 +95,7 @@ router.post('/addCart', function(req,res,next) {
 							})
 						}else {
 							if(doc) {
+								// gooods列表必须有对应字段不然加不上，或者如下写法
 								var docs = JSON.parse(JSON.stringify(doc));
 								docs.productNum = '1';
 								docs.checked = '1';
@@ -189,12 +191,14 @@ router.post('/removePro', function(req, res, next) {
 router.post('/cartEdit', function(req, res, next) {
 	var userId = req.cookies.userId,
 		productId = req.body.productId,
-		productNum = req.body.productNum;
+		productNum = req.body.productNum
+		checked = req.body.checked;
 	User.update({
 		userId: userId,
 		'cartList.productId': productId
 	},{
-		'cartList.$.productNum': productNum
+		'cartList.$.productNum': productNum,
+		'cartList.$.checked': checked
 	}, function(err,doc) {
 		if(err) {
 			res.json({
@@ -207,6 +211,39 @@ router.post('/cartEdit', function(req, res, next) {
 				status: '0',
 				msg: '',
 				result: doc
+			})
+		}
+	})
+})
+// 全选-批量修改选中
+router.post('/selectAllEdit', function(req, res, next) {
+	var userId = req.cookies.userId
+		selectAll = req.body.selectAll ? '1' : '0' ;
+	User.findOne({userId: userId}, function(err, userDoc) {
+		if(err) {
+			res.json({
+				status: '1',
+				msg: err.message,
+				result: ''
+			});
+		}else {
+			userDoc.cartList.forEach((item) => {
+				item.checked = selectAll
+			});
+			userDoc.save(function(err2, doc) {
+				if(err2) {
+					res.json({
+						status: '1',
+						msg: err2.message,
+						result: ''
+					});
+				}else {
+					res.json({
+						status: '0',
+						msg: '',
+						result: doc
+					});
+				}
 			})
 		}
 	})
