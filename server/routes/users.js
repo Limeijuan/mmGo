@@ -67,6 +67,7 @@ router.post('/addCart', function(req,res,next) {
 				userDoc.cartList.forEach((item) => {
 					if(item.productId == productId) {
 						goodsItem = item;
+						item.checked = '1';
 						item.productNum ++;
 					}
 				})

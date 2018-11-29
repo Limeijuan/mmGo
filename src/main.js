@@ -6,7 +6,7 @@ import router from './router'
 import VueLazyload from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
 import Global from '@/components/Global'
-// import axios from 'axios'
+import {currency} from '@/util/currency'
 import '@/assets/css/base.css'
 import '@/assets/css/login.css'
 import './assets/css/product.css'
@@ -16,6 +16,8 @@ Vue.use(VueLazyload, {
   loading: '/static/loading-svg/loading-bars.svg'
 })
 Vue.use(infiniteScroll)
+// 全局过滤器
+Vue.filter('currency', currency)
 
 /* eslint-disable no-new */
 new Vue({
