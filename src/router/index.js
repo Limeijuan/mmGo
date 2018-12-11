@@ -22,6 +22,20 @@ const router = new Router({
       //   requireAuth: true
       // },
       component: CartList
+    },
+    {
+      path: '/address',
+      name: 'Address',
+      component: (resolve) => {
+        require(['@/pages/Address'], resolve)
+      }
+    },
+    {
+      path: '/orderConfirm',
+      name: 'OrderConfirm',
+      component: (resolve) => {
+        require(['@/pages/OrderConfirm'], resolve)
+      }
     }
   ]
 })

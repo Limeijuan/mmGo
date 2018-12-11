@@ -72,6 +72,7 @@ export default {
       nickName: ''
     }
   },
+  inject: ['reload'],
   methods: {
     login () {
       if (!this.userName || !this.userPwd) {
@@ -85,6 +86,7 @@ export default {
           this.errorTip = false
           this.loginModelFlag = false
           this.nickName = res.data.result.userName
+          this.reload()
         } else {
           this.errorTip = true
         }

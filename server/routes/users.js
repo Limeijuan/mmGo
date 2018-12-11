@@ -155,7 +155,8 @@ router.post('/cartList', function(req, res, next) {
 })
 // 删除购物车商品
 router.post('/removePro', function(req, res, next) {
-	var productId = req.body.productId, userId = req.cookies.userId; 
+	var productId = req.body.productId, 
+		userId = req.cookies.userId; 
 	if(userId) {
 		User.update({
 			userId: userId
@@ -248,5 +249,107 @@ router.post('/selectAllEdit', function(req, res, next) {
 			})
 		}
 	})
+});
+// 查询用户地址等信息
+router.get('/addressList', function(req, res, next) {
+	var userId = req.cookies.userId;
+	User.findOne({userId: userId}, function(err, doc) {
+		if(err) {
+			res.json({
+				status: '1',
+				msg: err.message,
+				result: ''
+			});
+		}else {
+			res.json({
+				status: '0',
+				msg: '',
+				result: doc.addressList
+			});
+		}
+	})
+})
+// 设置用户默认地址
+router.post('/setDefault', function(req, res, next) {
+	var userId = req.cookies.userId
+		addressId = req.body.addressId;
+
+	if(!addressId) {
+		res.json({
+			status: '1',
+			msg: 'addressId is null',
+			result: ''
+		});
+	}else {
+		User.findOne({userId: userId}, function(err, userDoc) {
+			if(err) {
+				res.json({
+					status: '1',
+					msg: err.message,
+					result: ''
+				});
+			}else {
+				userDoc.addressList.forEach((item) => {
+					if(item.addressId == addressId) {
+						item.isDefault = true
+					}else {
+						item.isDefault = false
+					}
+					
+				});
+				userDoc.save(function(err2, doc) {
+					if(err2) {
+						res.json({
+							status: '1',
+							msg: err2.message,
+							result: ''
+						});
+					}else {
+						res.json({
+							status: '0',
+							msg: '',
+							result: doc
+						});
+					}
+				})
+			}
+		})
+	}
+});
+// 删除地址
+router.post('/delAddress', function(req, res, next) {
+	var userId = req.cookies.userId
+		addressId = req.body.addressId;
+	if(userId) {
+		User.update({
+			userId: userId
+		},{
+			$pull:{
+				'addressList': {
+					addressId: addressId
+				}
+			}
+		},function(err,doc) {
+			if(err) {
+				res.json({
+					status: '1',
+					msg: err.message,
+					result: ''
+				})
+			}else {
+				res.json({
+					status: '0',
+					msg: '',
+					result: 'success'
+				})
+			}
+		})
+	}else{
+	    res.json({
+			status:'1',
+			msg:'未登录',
+			result:''
+	    });
+	}
 })
 module.exports = router;
