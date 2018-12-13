@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var Goods = require('../models/goods.js');
+var dateFormat = require('../util/dateFormat.js');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -24,7 +25,7 @@ router.post('/login', function(req, res, next) {
 			if(doc) {
 				res.cookie('userId', doc.userId, {
 					path: '/',
-					maxAge: 1000*60*60
+					maxAge: 1000*60*60*24
 				});
 				req.session.user = doc;
 				res.json({
@@ -37,7 +38,7 @@ router.post('/login', function(req, res, next) {
 			}
 		}
 	})
-})
+});
 // 退出
 router.post('/loginOut', function(req, res, next) {
 	res.cookie('userId', '', {
@@ -49,7 +50,7 @@ router.post('/loginOut', function(req, res, next) {
 		msg: '',
 		result: ''
 	})
-})
+});
 // 加入购物车
 router.post('/addCart', function(req,res,next) {
 	// 需用户登录；取id,
@@ -123,7 +124,7 @@ router.post('/addCart', function(req,res,next) {
 			}
 		}
 	})
-})
+});
 // 查询当前用户购物车数据
 router.post('/cartList', function(req, res, next) {
 	if(req.cookies.userId){
@@ -152,7 +153,7 @@ router.post('/cartList', function(req, res, next) {
       result:''
     });
   }
-})
+});
 // 删除购物车商品
 router.post('/removePro', function(req, res, next) {
 	var productId = req.body.productId, 
@@ -188,7 +189,7 @@ router.post('/removePro', function(req, res, next) {
 			result:''
 	    });
 	}
-})
+});
 // 修改商品数量
 router.post('/cartEdit', function(req, res, next) {
 	var userId = req.cookies.userId,
@@ -216,7 +217,7 @@ router.post('/cartEdit', function(req, res, next) {
 			})
 		}
 	})
-})
+});
 // 全选-批量修改选中
 router.post('/selectAllEdit', function(req, res, next) {
 	var userId = req.cookies.userId
@@ -268,7 +269,7 @@ router.get('/addressList', function(req, res, next) {
 			});
 		}
 	})
-})
+});
 // 设置用户默认地址
 router.post('/setDefault', function(req, res, next) {
 	var userId = req.cookies.userId
@@ -345,6 +346,79 @@ router.post('/delAddress', function(req, res, next) {
 			}
 		})
 	}else{
+	    res.json({
+			status:'1',
+			msg:'未登录',
+			result:''
+	    });
+	}
+});
+// 订单支付-保存订单
+router.post('/payMent', function(req, res, next) {
+	var userId = req.cookies.userId,
+		addressId = req.body.addressId,
+		priceDetails = req.body.priceDetails
+
+	if(userId) {
+		User.findOne({userId: userId},function(err, doc) {
+	      	if(err) {
+	      		res.json({
+	      			status: '1',
+	      			msg: err.massage,
+	      			result: ''
+	      		})
+	      	}else {
+	      		if(doc) {
+	      			var address = '', goodsList = [];
+	      			//获取当前用户地址信息
+	      			doc.addressList.forEach((item) => {
+	      				if(addressId == item.addressId) {
+	      					address = item;
+	      				}
+	      			});
+	      			//获取当前用户购物车购买商品
+	      			doc.cartList.forEach((item) => {
+	      				if(item.checked == '1') {
+	      					goodsList.push(item);
+	      				}
+	      			});
+	      			var platForm = '688'; //当做系统平台 码
+	      			var  o1 = Math.floor(Math.random()*10);
+	      			var  o2 = Math.floor(Math.random()*10);
+	      			var sysDate = new Date().Format('yyyyMMddhhmmss');
+	      			var createDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
+	      			var orderId = platForm + o1 + sysDate + o2;
+	      			// 创建保存订单
+	      			let order = {
+	      				orderId : orderId,
+			            orderTotal : priceDetails.orderTotal,
+			            orderStatus : 1,
+			            createDate : createDate,
+			            goodsList:  goodsList
+	      			}
+	      			doc.orderList.push(order);
+	      			doc.save(function(err2,doc2) {
+	      				if(err2) {
+	      					res.json({
+				      			status: '1',
+				      			msg: err.massage,
+				      			result: ''
+				      		})
+	      				}else {
+	      					res.json({
+				      			status: '0',
+				      			msg: '',
+				      			result: {
+				      				orderId: order.orderId,
+				      				orderTotal: order.orderTotal
+				      			}
+				      		})
+	      				}
+	      			})
+	      		}
+	      	}
+	    })
+    }else{
 	    res.json({
 			status:'1',
 			msg:'未登录',

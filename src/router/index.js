@@ -36,6 +36,13 @@ const router = new Router({
       component: (resolve) => {
         require(['@/pages/OrderConfirm'], resolve)
       }
+    },
+    {
+      path: '/orderSuccess',
+      name: 'OrderSuccess',
+      component: (resolve) => {
+        require(['@/pages/OrderSuccess'], resolve)
+      }
     }
   ]
 })
