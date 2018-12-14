@@ -23,8 +23,8 @@
         <div class="order-create-main">
           <h3>Congratulations! <br>Your order is under processing!</h3>
           <p>
-            <span>Order ID：100000001</span>
-            <span>Order total：1000</span>
+            <span>Order ID：{{orderId}}</span>
+            <span>Order total：{{orderTotal | currency}}</span>
           </p>
           <div class="order-create-btn-wrap">
             <div class="btn-l-wrap">
@@ -49,7 +49,8 @@ export default {
   name: 'OrderSuccess',
   data () {
     return {
-      
+      orderId: '',
+      orderTotal: 0
     }
   },
   components: {
@@ -58,8 +59,20 @@ export default {
     NavBread
   },
   mounted () {
-    axios.get('/users/orderDefault',{}).then((res) => {
-      
+    var orderId = this.$route.query.orderId
+    if (!orderId) {
+      return
+    }
+    axios.get('/users/orderDefault', {
+      params: {orderId: orderId}
+    }).then((res) => {
+      let data = res.data
+      if (data.status === '0') {
+        this.orderId = res.data.result.orderId
+        this.orderTotal = res.data.result.orderTotal
+      }
+    }).catch((err) => {
+      console.log(err)
     })
   }
 }
