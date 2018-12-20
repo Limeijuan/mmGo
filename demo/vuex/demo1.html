@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vuex-state</title>
+</head>
+<body>
+	<div id="app">
+		<h1>{{msg}}</h1>
+		<counter></counter>
+	</div>
+</body>
+<script src="../../node_modules/vue/dist/vue.js"></script>
+<script src="../../node_modules/vuex/dist/vuex.js"></script>
+<script>
+	const Counter = {
+	    template: `<div>{{ count }}</div>`,
+	    computed: {
+		    count () {
+		        return this.$store.state.count
+		    }
+		}
+	}
+
+	const store = new Vuex.Store({
+		state: {
+			count: 0
+		}
+	})
+	new Vue({
+		el: "#app",
+		store,
+		data () {
+			return {
+				msg: "Vuex的使用"
+			}
+		},
+		components: {
+			Counter
+		}
+	})
+</script>
+</html>

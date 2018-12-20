@@ -27,7 +27,11 @@ router.post('/login', function(req, res, next) {
 					path: '/',
 					maxAge: 1000*60*60*24
 				});
-				req.session.user = doc;
+				res.cookie('userName', doc.userName, {
+					path: '/',
+					maxAge: 1000*60*60*24
+				});
+				// req.session.user = doc;
 				res.json({
 					status: '0',
 					msg: '',
@@ -39,6 +43,53 @@ router.post('/login', function(req, res, next) {
 		}
 	})
 });
+// 判断 是否在登陆有效期
+router.get("/checkLogin", function (req,res,next) {
+  if(req.cookies.userId){
+      res.json({
+        status:'0',
+        msg:'',
+        result:req.cookies.userName || ''
+      });
+  }else{
+    res.json({
+      status:'1',
+      msg:'未登录',
+      result:''
+    });
+  }
+});
+// 购物车商品数量
+router.post("/getCartCount", function(req,res,next) {
+	if(req.cookies.userId) {
+		var userId = req.cookies.userId;
+		User.findOne({userId: userId},function(err, doc) {
+	      	if(err) {
+	      		res.json({
+	      			status: '1',
+	      			msg: err.massage,
+	      			result: ''
+	      		})
+	      	}else {
+	      		if(doc.cartList) {
+	      			res.json({
+		      			status: '0',
+		      			msg: 'success',
+		      			result: {
+		      				cartCount : doc.cartList.length
+		      			}
+		      		})
+	      		}
+	      	}
+	    })
+	}else{
+	    res.json({
+			status:'1',
+			msg:'未登录',
+			result:''
+	    });
+	  }
+})
 // 退出
 router.post('/loginOut', function(req, res, next) {
 	res.cookie('userId', '', {
@@ -139,10 +190,10 @@ router.post('/cartList', function(req, res, next) {
       	}else {
       		if(doc) {
       			res.json({
-      			status: '0',
-      			msg: 'success',
-      			result: doc.cartList || ''
-      		})
+	      			status: '0',
+	      			msg: 'success',
+	      			result: doc.cartList || ''
+	      		})
       		}
       	}
       })

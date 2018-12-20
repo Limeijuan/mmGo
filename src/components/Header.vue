@@ -68,11 +68,18 @@ export default {
       userName: '',
       userPwd: '',
       errorTip: false,
-      loginModelFlag: false,
-      nickName: ''
+      loginModelFlag: false
     }
   },
   inject: ['reload'],
+  computed: {
+    nickName () {
+      return this.$store.state.nickName
+    }
+  },
+  mounted () {
+    this.checkLogin()
+  },
   methods: {
     login () {
       if (!this.userName || !this.userPwd) {
@@ -85,7 +92,7 @@ export default {
         if (res.data.status === '0') {
           this.errorTip = false
           this.loginModelFlag = false
-          this.nickName = res.data.result.userName
+          this.getCartCount()
           this.reload()
         } else {
           this.errorTip = true
@@ -94,11 +101,27 @@ export default {
         console.log(err)
       })
     },
+    checkLogin () {
+      axios.get('/users/checkLogin').then((res) => {
+        this.$store.commit('updateNickName', res.data.result)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     loginOut () {
+      alert('退出登录')
       axios.post('/users/loginOut').then((res) => {
         if (res.data.status === '0') {
           this.nickName = ''
+          this.reload()
         }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    getCartCount () {
+      axios.post('/users/getCartCount').then((res) => {
+        this.$store.commit('updateCartCount', res.data.result.cartCount)
       }).catch((err) => {
         console.log(err)
       })
