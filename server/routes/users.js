@@ -135,7 +135,7 @@ router.post('/addCart', function(req,res,next) {
 							res.json({
 								status: '0',
 								msg: '',
-								result: 'success'
+								result: '0'
 							})
 						}
 					})
@@ -163,7 +163,7 @@ router.post('/addCart', function(req,res,next) {
 										res.json({
 											status: '0',
 											msg: '',
-											result: 'success'
+											result: '1'
 										})
 									}
 								})

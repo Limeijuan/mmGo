@@ -17,7 +17,7 @@
             <a href="javascript:void(0)" class="navbar-link" @click="loginOut" >Login Out</a>
           </div>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
+            <span class="navbar-cart-count" v-if="cartCount">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
               <svg class="navbar-cart-logo">
                 <use xlink:href="../../static/svg.svg#icon-cart"></use>
@@ -62,6 +62,7 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -73,9 +74,13 @@ export default {
   },
   inject: ['reload'],
   computed: {
-    nickName () {
-      return this.$store.state.nickName
-    }
+    ...mapState(['nickName', 'cartCount'])
+    // nickName () {
+    //   return this.$store.state.nickName
+    // },
+    // cartCount () {
+    //   return this.$store.state.cartCount
+    // }
   },
   mounted () {
     this.checkLogin()
@@ -92,7 +97,6 @@ export default {
         if (res.data.status === '0') {
           this.errorTip = false
           this.loginModelFlag = false
-          this.getCartCount()
           this.reload()
         } else {
           this.errorTip = true
@@ -104,6 +108,7 @@ export default {
     checkLogin () {
       axios.get('/users/checkLogin').then((res) => {
         this.$store.commit('updateNickName', res.data.result)
+        this.getCartCount()
       }).catch((err) => {
         console.log(err)
       })
@@ -121,7 +126,7 @@ export default {
     },
     getCartCount () {
       axios.post('/users/getCartCount').then((res) => {
-        this.$store.commit('updateCartCount', res.data.result.cartCount)
+        this.$store.commit('initCartCount', res.data.result.cartCount)
       }).catch((err) => {
         console.log(err)
       })

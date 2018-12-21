@@ -182,6 +182,7 @@ export default{
         .then((res) => {
           if (res.data.status === '0') {
             this.isDel = false
+            this.$store.commit('updateCartCount', -1)
             this.getCartList()
           }
         })
