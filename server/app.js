@@ -37,7 +37,7 @@ app.use(session({
     rolling:true, //动态刷新页面cookie存放时间
     cookie:{maxAge:24*60*60*1000}, //保存时效
     store: new MongoStore({   //将session存进数据库  用来解决负载均衡的问题
-        url:'mongodb://127.0.0.1:27017/sesssionText',
+        url:'mongodb://47.98.167.40:27017/sesssionText',
         touchAfter:24*3600 //通过这样做，设置touchAfter:24 * 3600，您在24小时内只更新一次会话，不管有多少请求(除了在会话数据上更改某些内容的除外)
     })
 }))

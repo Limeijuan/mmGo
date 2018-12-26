@@ -5,7 +5,7 @@ var Goods = require('../models/goods.js');
 
 
 // // 连接MongoDB数据库
-mongoose.connect('mongodb://127.0.0.1:27017/text');
+mongoose.connect('mongodb://47.98.167.40:27017/text');
 
 // 连接成功
 mongoose.connection.on('connected', function() {
